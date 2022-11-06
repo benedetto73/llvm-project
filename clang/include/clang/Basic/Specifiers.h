@@ -37,7 +37,9 @@ namespace clang {
     Ordinary,
     Constexpr,
     ConstevalNonNegated,
-    ConstevalNegated
+    ConstevalNegated,
+    ReentrantNonNegated,
+    ReentrantNegated
   };
 
   /// Specifies the width of a type, e.g., short, long, or long long.
