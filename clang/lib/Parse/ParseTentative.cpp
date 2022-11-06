@@ -1162,6 +1162,7 @@ public:
 ///           'typedef'
 /// [C++11]   'constexpr'
 /// [C++20]   'consteval'
+/// [benedetto73]   'reentrant'
 /// [GNU]     attributes declaration-specifiers[opt]
 ///
 ///         storage-class-specifier:
@@ -1382,6 +1383,7 @@ Parser::isCXXDeclarationSpecifier(ImplicitTypenameContext AllowImplicitTypename,
   case tok::kw_constexpr:
   case tok::kw_consteval:
   case tok::kw_constinit:
+  case tok::kw_reentrant:
     // storage-class-specifier
   case tok::kw_register:
   case tok::kw_static:
