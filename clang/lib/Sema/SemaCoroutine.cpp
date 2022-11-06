@@ -206,6 +206,7 @@ static bool isValidCoroutineContext(Sema &S, SourceLocation Loc,
     DiagAutoRet,
     DiagVarargs,
     DiagConsteval,
+    DiagReentrant,
   };
   bool Diagnosed = false;
   auto DiagInvalid = [&](InvalidFuncDiag ID) {
@@ -227,6 +228,8 @@ static bool isValidCoroutineContext(Sema &S, SourceLocation Loc,
   else if (FD->isMain())
     return DiagInvalid(DiagMain);
 
+  // betto TODO: emit 'reentrant' Diagnostic?
+  
   // Emit a diagnostics for each of the following conditions which is not met.
   // [expr.const]p2: "An expression e is a core constant expression unless the
   // evaluation of e [...] would evaluate one of the following expressions:
