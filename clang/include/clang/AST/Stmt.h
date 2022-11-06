@@ -163,6 +163,9 @@ protected:
 
     unsigned : NumStmtBits;
 
+    /// Whether this is a reentrant if or not.
+    unsigned Reentrant : 1;
+
     /// Whether this is a constexpr if, or a consteval if, or neither.
     unsigned Kind : 3;
 
@@ -2110,6 +2113,19 @@ public:
     *getTrailingObjects<SourceLocation>() = ElseLoc;
   }
 
+  bool isReentrant() const {
+    return getStatementKind() == IfStatementKind::ReentrantNonNegated ||
+           getStatementKind() == IfStatementKind::ReentrantNegated;
+  }
+        
+  bool isNonNegatedReentrant() const {
+    return getStatementKind() == IfStatementKind::ReentrantNonNegated;
+  }
+
+  bool isNegatedReentrant() const {
+    return getStatementKind() == IfStatementKind::ReentrantNegated;
+  }
+        
   bool isConsteval() const {
     return getStatementKind() == IfStatementKind::ConstevalNonNegated ||
            getStatementKind() == IfStatementKind::ConstevalNegated;
@@ -2158,6 +2174,7 @@ public:
   child_range children() {
     // We always store a condition, but there is none for consteval if
     // statements, so skip it.
+    // betto: Anything here?
     return child_range(getTrailingObjects<Stmt *>() +
                            (isConsteval() ? thenOffset() : 0),
                        getTrailingObjects<Stmt *>() +
