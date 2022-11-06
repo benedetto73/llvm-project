@@ -29,7 +29,7 @@ namespace clang {
   };
 
   /// Define the kind of constexpr specifier.
-  enum class ConstexprSpecKind { Unspecified, Constexpr, Consteval, Constinit };
+  enum class ConstexprSpecKind { Unspecified, Constexpr, Consteval, Constinit, Reentrant };
 
   /// In an if statement, this denotes whether the the statement is
   /// a constexpr or consteval if statement.
