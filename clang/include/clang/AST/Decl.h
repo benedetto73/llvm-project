@@ -2341,6 +2341,9 @@ public:
   bool isConsteval() const {
     return getConstexprKind() == ConstexprSpecKind::Consteval;
   }
+  bool isReentrant() const {
+    return getConstexprKind() == ConstexprSpecKind::Reentrant;
+  }
 
   /// Whether the instantiation of this function is pending.
   /// This bit is set when the decision to instantiate this function is made
