@@ -3146,6 +3146,9 @@ CFGBlock *CFGBuilder::VisitIfStmt(IfStmt *I) {
     }
   }
 
+  // betto TODO
+  // I believe here I need to check reentrant attributes for expression down trees.
+  
   // Specially handle "if (expr1 || ...)" and "if (expr1 && ...)" by
   // having these handle the actual control-flow jump.  Note that
   // if we introduce a condition variable, e.g. "if (int x = exp1 || exp2)"
