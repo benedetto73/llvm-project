@@ -4000,7 +4000,11 @@ void Parser::ParseDeclarationSpecifiers(
       isInvalid = DS.setModulePrivateSpec(Loc, PrevSpec, DiagID);
       break;
 
-    // constexpr, consteval, constinit specifiers
+    // constexpr, consteval, constinit and reentrant specifiers
+    case tok::kw_reentrant:
+      isInvalid = DS.SetConstexprSpec(ConstexprSpecKind::Reentrant, Loc,
+                                      PrevSpec, DiagID);
+      break;
     case tok::kw_constexpr:
       isInvalid = DS.SetConstexprSpec(ConstexprSpecKind::Constexpr, Loc,
                                       PrevSpec, DiagID);
@@ -4008,7 +4012,7 @@ void Parser::ParseDeclarationSpecifiers(
     case tok::kw_consteval:
       isInvalid = DS.SetConstexprSpec(ConstexprSpecKind::Consteval, Loc,
                                       PrevSpec, DiagID);
-      break;
+      break;f
     case tok::kw_constinit:
       isInvalid = DS.SetConstexprSpec(ConstexprSpecKind::Constinit, Loc,
                                       PrevSpec, DiagID);
