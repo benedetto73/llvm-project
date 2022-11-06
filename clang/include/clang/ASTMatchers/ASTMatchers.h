@@ -5245,6 +5245,27 @@ AST_POLYMORPHIC_MATCHER(isNoThrow,
   return FnTy->isNothrow();
 }
 
+// Betto: do Iwant reentrant in if statements?
+  
+/// Matches reentrant function declarations and if reentrant/if ! reentrant
+/// statements.
+///
+/// Given:
+/// \code
+///   reentrant int a();
+///   void b() { if reentrant {} }
+///   void c() { if ! reentrant {} }
+///   void d() { if ! reentrant {} else {} }
+/// \endcode
+/// functionDecl(isReentrant())
+///   matches the declaration of "int a()".
+/// ifStmt(isReentrant())
+///   matches the if statement in "void b()", "void c()", "void d()".
+AST_POLYMORPHIC_MATCHER(isReentrant,
+                        AST_POLYMORPHIC_SUPPORTED_TYPES(FunctionDecl, IfStmt)) {
+  return Node.isReentrant();
+}
+
 /// Matches consteval function declarations and if consteval/if ! consteval
 /// statements.
 ///
