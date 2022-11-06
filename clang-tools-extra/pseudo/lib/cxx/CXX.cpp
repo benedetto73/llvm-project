@@ -237,6 +237,7 @@ bool hasExclusiveType(const ForestNode *N) {
       case rule::decl_specifier::CONSTEVAL:
       case rule::decl_specifier::CONSTEXPR:
       case rule::decl_specifier::CONSTINIT:
+      case rule::decl_specifier::REENTRANT:
       case rule::decl_specifier::INLINE:
       case rule::decl_specifier::FRIEND:
       case rule::decl_specifier::storage_class_specifier:
