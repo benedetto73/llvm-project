@@ -1439,6 +1439,9 @@ struct MisleadingIndentationChecker {
 /// [C++]   'if' '(' condition ')' statement 'else' statement
 /// [C++23] 'if' '!' [opt] consteval compound-statement
 /// [C++23] 'if' '!' [opt] consteval compound-statement 'else' statement
+// betto: do I need/want  these ???
+/// [benedetto73] 'if' '!' [opt] reentrant compound-statement
+/// [benedetto73] 'if' '!' [opt] reentrant compound-statement 'else' statement
 ///
 StmtResult Parser::ParseIfStatement(SourceLocation *TrailingElseLoc) {
   assert(Tok.is(tok::kw_if) && "Not an if stmt!");
@@ -1446,6 +1449,7 @@ StmtResult Parser::ParseIfStatement(SourceLocation *TrailingElseLoc) {
 
   bool IsConstexpr = false;
   bool IsConsteval = false;
+  bool IsReentrant = false;
   SourceLocation NotLocation;
   SourceLocation ConstevalLoc;
 
