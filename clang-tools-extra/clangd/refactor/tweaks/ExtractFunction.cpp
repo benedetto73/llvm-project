@@ -437,6 +437,9 @@ std::string NewFunction::renderSpecifiers(FunctionDeclKind K) const {
   case ConstexprSpecKind::Consteval:
     Attributes += "consteval ";
     break;
+  case ConstexprSpecKind::Reentrant:
+    Attributes += "reentrant ";
+    break;
   }
 
   return Attributes;
