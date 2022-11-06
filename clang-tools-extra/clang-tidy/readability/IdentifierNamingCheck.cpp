@@ -322,7 +322,7 @@ std::string IdentifierNamingCheck::HungarianNotation::getDeclTypeName(
 
     static constexpr StringRef Keywords[] = {
         // Constexpr specifiers
-        "constexpr", "constinit", "consteval",
+        "constexpr", "constinit", "consteval", "reentrant",
         // Qualifier
         "const", "volatile", "restrict", "mutable",
         // Storage class specifiers
