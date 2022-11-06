@@ -1381,6 +1381,8 @@ void DeclSpec::Finish(Sema &S, const PrintingPolicy &Policy) {
     S.Diag(ConstexprLoc, diag::warn_cxx98_compat_constexpr);
   else if (getConstexprSpecifier() == ConstexprSpecKind::Consteval)
     S.Diag(ConstexprLoc, diag::warn_cxx20_compat_consteval);
+  else if (getConstexprSpecifier() == ConstexprSpecKind::Reentrant)
+    S.Diag(ConstexprLoc, diag::warn_cxx20_compat_reentrant);
   else if (getConstexprSpecifier() == ConstexprSpecKind::Constinit)
     S.Diag(ConstexprLoc, diag::warn_cxx20_compat_constinit);
   // C++ [class.friend]p6:
