@@ -1525,6 +1525,8 @@ void JSONNodeDumper::VisitIfStmt(const IfStmt *IS) {
   attributeOnlyIfTrue("isConstexpr", IS->isConstexpr());
   attributeOnlyIfTrue("isConsteval", IS->isConsteval());
   attributeOnlyIfTrue("constevalIsNegated", IS->isNegatedConsteval());
+  attributeOnlyIfTrue("isReentrant", IS->isReentrant());
+  attributeOnlyIfTrue("reentrantIsNegated", IS->isNegatedReentrant());
 }
 
 void JSONNodeDumper::VisitSwitchStmt(const SwitchStmt *SS) {
