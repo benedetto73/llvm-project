@@ -39,6 +39,10 @@
 #error "wrong value for __cpp_size_t_suffix"
 #endif
 
+#if check(if_reentrant, 0, 0, 0, 0, 0, 202106)
+#error "wrong value for __cpp_if_reentrant"
+#endif
+
 #if check(if_consteval, 0, 0, 0, 0, 0, 202106)
 #error "wrong value for __cpp_if_consteval"
 #endif
