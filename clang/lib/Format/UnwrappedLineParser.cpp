@@ -2258,6 +2258,7 @@ bool UnwrappedLineParser::tryToParseLambda() {
     case tok::kw_const:
     case tok::kw_constexpr:
     case tok::kw_consteval:
+    case tok::kw_reentrant:
     case tok::comma:
     case tok::greater:
     case tok::identifier:
@@ -2722,7 +2723,10 @@ FormatToken *UnwrappedLineParser::parseIfThenElse(IfStmtKind *IfKind,
   bool KeepIfBraces = true;
   if (FormatTok->is(tok::kw_consteval)) {
     nextToken();
-  } else {
+    // betto: does this make sense?
+  } else if (FormatTok->is(tok::kw_reentrant)) {
+    nextToken();
+  {
     KeepIfBraces = !Style.RemoveBracesLLVM || KeepBraces;
     if (FormatTok->isOneOf(tok::kw_constexpr, tok::identifier))
       nextToken();
