@@ -420,7 +420,7 @@ DeclarationFragmentsBuilder::getFragmentsForFunction(const FunctionDecl *Func) {
   case SC_Register:
     llvm_unreachable("invalid for functions");
   }
-  // FIXME: Handle C++ function specifiers: constexpr, consteval, explicit, etc.
+  // FIXME: Handle C++ function specifiers: constexpr, consteval, reentrant, explicit, etc.
 
   // FIXME: Is `after` actually needed here?
   DeclarationFragments After;
