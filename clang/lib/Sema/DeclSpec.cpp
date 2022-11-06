@@ -607,6 +607,8 @@ const char *DeclSpec::getSpecifierName(ConstexprSpecKind C) {
     return "consteval";
   case ConstexprSpecKind::Constinit:
     return "constinit";
+  case ConstexprSpecKind::Reentrant:
+    return "reentrant";
   }
   llvm_unreachable("Unknown ConstexprSpecKind");
 }
