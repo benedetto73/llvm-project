@@ -283,6 +283,8 @@ void TextNodeDumper::Visit(const Decl *D) {
       OS << " constexpr";
     if (FD->isConsteval())
       OS << " consteval";
+    if (FD->isReentrant())
+      OS << " reentrant";
     if (FD->isMultiVersion())
       OS << " multiversion";
   }
@@ -962,6 +964,11 @@ void TextNodeDumper::VisitIfStmt(const IfStmt *Node) {
     if (Node->isNegatedConsteval())
       OS << "!";
     OS << "consteval";
+  if (Node->isReentrant()) {
+    OS << " ";
+    if (Node->isNegatedReentrant())
+      OS << "!";
+    OS << "reentrant";
   }
 }
 
