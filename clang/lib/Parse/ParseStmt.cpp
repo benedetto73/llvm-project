@@ -1449,7 +1449,7 @@ StmtResult Parser::ParseIfStatement(SourceLocation *TrailingElseLoc) {
 
   bool IsConstexpr = false;
   bool IsConsteval = false;
-  bool IsReentrant = false;
+  //bool IsReentrant = false;
   SourceLocation NotLocation;
   SourceLocation ConstevalLoc;
 

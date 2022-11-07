@@ -4012,7 +4012,7 @@ void Parser::ParseDeclarationSpecifiers(
     case tok::kw_consteval:
       isInvalid = DS.SetConstexprSpec(ConstexprSpecKind::Consteval, Loc,
                                       PrevSpec, DiagID);
-      break;f
+      break;
     case tok::kw_constinit:
       isInvalid = DS.SetConstexprSpec(ConstexprSpecKind::Constinit, Loc,
                                       PrevSpec, DiagID);

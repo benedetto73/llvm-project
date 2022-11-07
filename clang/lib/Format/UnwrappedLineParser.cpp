@@ -2726,7 +2726,7 @@ FormatToken *UnwrappedLineParser::parseIfThenElse(IfStmtKind *IfKind,
     // betto: does this make sense?
   } else if (FormatTok->is(tok::kw_reentrant)) {
     nextToken();
-  {
+  } else {
     KeepIfBraces = !Style.RemoveBracesLLVM || KeepBraces;
     if (FormatTok->isOneOf(tok::kw_constexpr, tok::identifier))
       nextToken();

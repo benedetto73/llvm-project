@@ -964,6 +964,7 @@ void TextNodeDumper::VisitIfStmt(const IfStmt *Node) {
     if (Node->isNegatedConsteval())
       OS << "!";
     OS << "consteval";
+  }
   if (Node->isReentrant()) {
     OS << " ";
     if (Node->isNegatedReentrant())
