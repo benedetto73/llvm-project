@@ -3173,11 +3173,13 @@ static void SetupFixedPointError(const LangOptions &LangOpts,
 /// [C++11] 'thread_local'
 /// [C11]   '_Thread_local'
 /// [GNU]   '__thread'
+/// [bp73]  'reentrant'
 ///       function-specifier: [C99 6.7.4]
 /// [C99]   'inline'
 /// [C++]   'virtual'
 /// [C++]   'explicit'
 /// [OpenCL] '__kernel'
+/// [bp73]  'reentrant'
 ///       'friend': [C++ dcl.friend]
 ///       'constexpr': [C++0x dcl.constexpr]
 void Parser::ParseDeclarationSpecifiers(

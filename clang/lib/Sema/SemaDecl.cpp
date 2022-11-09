@@ -7716,6 +7716,12 @@ NamedDecl *Sema::ActOnVariableDeclarator(
   case ConstexprSpecKind::Unspecified:
     break;
 
+  case ConstexprSpecKind::Reentrant:
+    Diag(D.getDeclSpec().getConstexprSpecLoc(),
+         diag::err_constexpr_wrong_decl_kind)
+        << static_cast<int>(D.getDeclSpec().getConstexprSpecifier());
+    break;
+
   case ConstexprSpecKind::Consteval:
     Diag(D.getDeclSpec().getConstexprSpecLoc(),
          diag::err_constexpr_wrong_decl_kind)

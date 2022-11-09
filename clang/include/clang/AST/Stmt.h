@@ -2125,10 +2125,14 @@ public:
   bool isNegatedReentrant() const {
     return getStatementKind() == IfStatementKind::ReentrantNegated;
   }
-        
+
   bool isConsteval() const {
     return getStatementKind() == IfStatementKind::ConstevalNonNegated ||
            getStatementKind() == IfStatementKind::ConstevalNegated;
+  }
+
+  bool isSomeConst() const {
+    return isConsteval() || isReentrant();
   }
 
   bool isNonNegatedConsteval() const {
@@ -2176,7 +2180,7 @@ public:
     // statements, so skip it.
     // betto: Anything here?
     return child_range(getTrailingObjects<Stmt *>() +
-                           (isConsteval() ? thenOffset() : 0),
+                           (isSomeConst() ? thenOffset() : 0),
                        getTrailingObjects<Stmt *>() +
                            numTrailingObjects(OverloadToken<Stmt *>()));
   }
@@ -2185,7 +2189,7 @@ public:
     // We always store a condition, but there is none for consteval if
     // statements, so skip it.
     return const_child_range(getTrailingObjects<Stmt *>() +
-                                 (isConsteval() ? thenOffset() : 0),
+                                 (isSomeConst() ? thenOffset() : 0),
                              getTrailingObjects<Stmt *>() +
                                  numTrailingObjects(OverloadToken<Stmt *>()));
   }

@@ -1234,6 +1234,20 @@ addConstexprToLambdaDeclSpecifier(Parser &P, SourceLocation ConstexprLoc,
   }
 }
 
+static void addReentrantToLambdaDeclSpecifier(Parser &P,
+                                              SourceLocation ConstevalLoc,
+                                              DeclSpec &DS) {
+  if (ConstevalLoc.isValid()) {
+    //P.Diag(ConstevalLoc, diag::warn_cxx20_compat_consteval);
+    const char *PrevSpec = nullptr;
+    unsigned DiagID = 0;
+    DS.SetConstexprSpec(ConstexprSpecKind::Reentrant, ConstevalLoc, PrevSpec,
+                        DiagID);
+    if (DiagID != 0)
+      P.Diag(ConstevalLoc, DiagID) << PrevSpec;
+  }
+}
+
 static void addConstevalToLambdaDeclSpecifier(Parser &P,
                                               SourceLocation ConstevalLoc,
                                               DeclSpec &DS) {
@@ -1394,6 +1408,7 @@ ExprResult Parser::ParseLambdaExpressionAfterIntroducer(
         addStaticToLambdaDeclSpecifier(*this, StaticLoc, DS);
         addConstexprToLambdaDeclSpecifier(*this, ConstexprLoc, DS);
         addConstevalToLambdaDeclSpecifier(*this, ConstevalLoc, DS);
+        addReentrantToLambdaDeclSpecifier(*this, ConstevalLoc, DS);
         // Parse exception-specification[opt].
         ExceptionSpecificationType ESpecType = EST_None;
         SourceRange ESpecRange;
@@ -1486,7 +1501,7 @@ ExprResult Parser::ParseLambdaExpressionAfterIntroducer(
     if (Tok.is(tok::kw_requires))
       ParseTrailingRequiresClause(D);
   } else if (Tok.isOneOf(tok::kw_mutable, tok::arrow, tok::kw___attribute,
-                         tok::kw_constexpr, tok::kw_consteval, tok::kw_static,
+                         tok::kw_constexpr, tok::kw_consteval, tok::kw_reentrant, tok::kw_static,
                          tok::kw___private, tok::kw___global, tok::kw___local,
                          tok::kw___constant, tok::kw___generic,
                          tok::kw_groupshared, tok::kw_requires,

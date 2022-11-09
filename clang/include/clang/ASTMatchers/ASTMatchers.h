@@ -5245,7 +5245,7 @@ AST_POLYMORPHIC_MATCHER(isNoThrow,
   return FnTy->isNothrow();
 }
 
-// Betto: do Iwant reentrant in if statements?
+// Betto: do I want reentrant in if statements?
   
 /// Matches reentrant function declarations and if reentrant/if ! reentrant
 /// statements.
