@@ -548,6 +548,7 @@ public:
 
   bool isIf(bool AllowConstexprMacro = true) const {
     return is(tok::kw_if) || endsSequence(tok::kw_constexpr, tok::kw_if) ||
+      endsSequence(tok::kw_reentrant, tok::kw_if) ||
            (endsSequence(tok::identifier, tok::kw_if) && AllowConstexprMacro);
   }
 

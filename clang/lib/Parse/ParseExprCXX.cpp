@@ -1161,11 +1161,13 @@ static void tryConsumeLambdaSpecifierToken(Parser &P,
                                            SourceLocation &StaticLoc,
                                            SourceLocation &ConstexprLoc,
                                            SourceLocation &ConstevalLoc,
+                                           SourceLocation &ReentrantLoc,
                                            SourceLocation &DeclEndLoc) {
   assert(MutableLoc.isInvalid());
   assert(StaticLoc.isInvalid());
   assert(ConstexprLoc.isInvalid());
   assert(ConstevalLoc.isInvalid());
+  assert(ReentrantLoc.isInvalid());
   // Consume constexpr-opt mutable-opt in any sequence, and set the DeclEndLoc
   // to the final of those locations. Emit an error if we have multiple
   // copies of those keywords and recover.
@@ -1195,6 +1197,9 @@ static void tryConsumeLambdaSpecifierToken(Parser &P,
       break;
     case tok::kw_consteval:
       ConsumeLocation(ConstevalLoc, 3);
+      break;
+    case tok::kw_reentrant:
+      ConsumeLocation(ReentrantLoc, 4);
       break;
     default:
       return;
@@ -1235,16 +1240,16 @@ addConstexprToLambdaDeclSpecifier(Parser &P, SourceLocation ConstexprLoc,
 }
 
 static void addReentrantToLambdaDeclSpecifier(Parser &P,
-                                              SourceLocation ConstevalLoc,
+                                              SourceLocation ReentrantLoc,
                                               DeclSpec &DS) {
-  if (ConstevalLoc.isValid()) {
-    //P.Diag(ConstevalLoc, diag::warn_cxx20_compat_consteval);
+  if (ReentrantLoc.isValid()) {
+    //P.Diag(ReentrantLoc, diag::warn_cxx20_compat_consteval);
     const char *PrevSpec = nullptr;
     unsigned DiagID = 0;
-    DS.SetConstexprSpec(ConstexprSpecKind::Reentrant, ConstevalLoc, PrevSpec,
+    DS.SetConstexprSpec(ConstexprSpecKind::Reentrant, ReentrantLoc, PrevSpec,
                         DiagID);
     if (DiagID != 0)
-      P.Diag(ConstevalLoc, DiagID) << PrevSpec;
+      P.Diag(ReentrantLoc, DiagID) << PrevSpec;
   }
 }
 
@@ -1399,8 +1404,9 @@ ExprResult Parser::ParseLambdaExpressionAfterIntroducer(
         SourceLocation StaticLoc;
         SourceLocation ConstexprLoc;
         SourceLocation ConstevalLoc;
+        SourceLocation ReentrantLoc;
         tryConsumeLambdaSpecifierToken(*this, MutableLoc, StaticLoc,
-                                       ConstexprLoc, ConstevalLoc, DeclEndLoc);
+                                       ConstexprLoc, ConstevalLoc, ReentrantLoc, DeclEndLoc);
 
         DiagnoseStaticSpecifierRestrictions(*this, StaticLoc, MutableLoc,
                                             Intro);
@@ -1408,7 +1414,7 @@ ExprResult Parser::ParseLambdaExpressionAfterIntroducer(
         addStaticToLambdaDeclSpecifier(*this, StaticLoc, DS);
         addConstexprToLambdaDeclSpecifier(*this, ConstexprLoc, DS);
         addConstevalToLambdaDeclSpecifier(*this, ConstevalLoc, DS);
-        addReentrantToLambdaDeclSpecifier(*this, ConstevalLoc, DS);
+        addReentrantToLambdaDeclSpecifier(*this, ReentrantLoc, DS);
         // Parse exception-specification[opt].
         ExceptionSpecificationType ESpecType = EST_None;
         SourceRange ESpecRange;

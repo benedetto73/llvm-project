@@ -1062,7 +1062,8 @@ private:
       break;
     case tok::kw_if:
       if (CurrentToken &&
-          CurrentToken->isOneOf(tok::kw_constexpr, tok::identifier)) {
+          (CurrentToken->isOneOf(tok::kw_constexpr, tok::identifier) ||
+          CurrentToken->isOneOf(tok::kw_reentrant, tok::identifier))) {
         next();
       }
       [[fallthrough]];

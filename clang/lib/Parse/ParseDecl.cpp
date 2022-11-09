@@ -5552,6 +5552,9 @@ bool Parser::isDeclarationSpecifier(
   case tok::kw_consteval:
   case tok::kw_constinit:
 
+  // C++bp73-A
+  case tok::kw_reentrant:
+
     // C11 _Atomic
   case tok::kw__Atomic:
     return true;
