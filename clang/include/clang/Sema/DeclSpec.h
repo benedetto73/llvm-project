@@ -315,7 +315,6 @@ public:
     // This has no corresponding Qualifiers::TQ value, because it's not treated
     // as a qualifier in our type system.
     TQ_atomic      = 16,
-    TQ_reentrant   = 32,
   };
 
   /// ParsedSpecifiers - Flags to query which specifiers were applied.  This is
@@ -327,6 +326,11 @@ public:
     PQ_TypeQualifier         = 4,
     PQ_FunctionSpecifier     = 8
     // FIXME: Attributes should be included here.
+  };
+
+  enum CQ {
+    CQ_None      = 0,
+    CQ_Reentrant = 1,
   };
 
   enum FriendSpecified : bool {
@@ -355,6 +359,8 @@ private:
 
   // type-qualifiers
   unsigned TypeQualifiers : 6;  // Bitwise OR of TQ.
+
+  unsigned ConcurrencyQualifiers : 1;
 
   // function-specifier
   unsigned FS_inline_specified : 1;
@@ -397,8 +403,9 @@ private:
   /// TSTNameLoc provides source range info for tag types.
   SourceLocation TSTNameLoc;
   SourceRange TypeofParensRange;
-  SourceLocation TQ_constLoc, TQ_restrictLoc, TQ_volatileLoc, TQ_atomicLoc, TQ_reentrantLoc,
+  SourceLocation TQ_constLoc, TQ_restrictLoc, TQ_volatileLoc, TQ_atomicLoc,
       TQ_unalignedLoc;
+  SourceLocation CQ_reentrantLoc;
   SourceLocation FS_inlineLoc, FS_virtualLoc, FS_explicitLoc, FS_noreturnLoc;
   SourceLocation FS_explicitCloseParenLoc;
   SourceLocation FS_forceinlineLoc;
@@ -449,7 +456,9 @@ public:
         TypeSpecType(TST_unspecified), TypeAltiVecVector(false),
         TypeAltiVecPixel(false), TypeAltiVecBool(false), TypeSpecOwned(false),
         TypeSpecPipe(false), TypeSpecSat(false), ConstrainedAuto(false),
-        TypeQualifiers(TQ_unspecified), FS_inline_specified(false),
+        TypeQualifiers(TQ_unspecified),
+        ConcurrencyQualifiers(CQ_None),
+        FS_inline_specified(false),
         FS_forceinline_specified(false), FS_virtual_specified(false),
         FS_noreturn_specified(false), Friend_specified(false),
         ConstexprSpecifier(
@@ -562,6 +571,19 @@ public:
   static const char *getSpecifierName(DeclSpec::TSCS S);
   static const char *getSpecifierName(ConstexprSpecKind C);
 
+
+  // concurrency-qualifiers
+
+  /// getConcurrencyQualifiers - Return a set of CQs.
+  unsigned getConcurrencyQualifiers() const { return ConcurrencyQualifiers; }
+  SourceLocation getReentrantSpecLoc() const { return CQ_reentrantLoc; }
+
+  /// Clear out all of the type qualifiers.
+  void ClearConcurrencyQualifiers() {
+    ConcurrencyQualifiers = 0;
+    CQ_reentrantLoc = SourceLocation();
+  }
+
   // type-qualifiers
 
   /// getTypeQualifiers - Return a set of TQs.
@@ -580,7 +602,6 @@ public:
     TQ_restrictLoc = SourceLocation();
     TQ_volatileLoc = SourceLocation();
     TQ_atomicLoc = SourceLocation();
-    TQ_reentrantLoc = SourceLocation();
     TQ_unalignedLoc = SourceLocation();
     TQ_pipeLoc = SourceLocation();
   }
@@ -747,6 +768,9 @@ public:
 
   bool SetTypeQual(TQ T, SourceLocation Loc, const char *&PrevSpec,
                    unsigned &DiagID, const LangOptions &Lang);
+
+  bool setConcurrencySpec(CQ C, SourceLocation Loc, const char *&PrevSpec,
+                              unsigned &DiagID);
 
   bool setFunctionSpecInline(SourceLocation Loc, const char *&PrevSpec,
                              unsigned &DiagID);

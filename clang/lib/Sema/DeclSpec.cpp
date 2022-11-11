@@ -230,6 +230,10 @@ DeclaratorChunk DeclaratorChunk::getFunction(bool hasProto,
     I.Fun.MethodQualifiers->getAttributePool().takeAllFrom(attrs.getPool());
   }
 
+  if (MethodQualifiers && MethodQualifiers->getConcurrencyQualifiers()) {
+    
+  }
+
   assert(I.Fun.ExceptionSpecType == ESpecType && "bitfield overflow");
 
   // new[] a parameter array if needed.
@@ -435,8 +439,6 @@ void DeclSpec::forEachCVRUQualifier(
     Handle(TQ_restrict, "restrict", TQ_restrictLoc);
   if (TypeQualifiers & TQ_unaligned)
     Handle(TQ_unaligned, "unaligned", TQ_unalignedLoc);
-  if (TypeQualifiers & TQ_reentrant)
-    Handle(TQ_reentrant, "reentrant", TQ_reentrantLoc);
 }
 
 void DeclSpec::forEachQualifier(
@@ -623,7 +625,6 @@ const char *DeclSpec::getSpecifierName(TQ T) {
   case DeclSpec::TQ_volatile:    return "volatile";
   case DeclSpec::TQ_atomic:      return "_Atomic";
   case DeclSpec::TQ_unaligned:   return "__unaligned";
-  case DeclSpec::TQ_reentrant:   return "reentrant";
   }
   llvm_unreachable("Unknown typespec!");
 }
@@ -992,10 +993,15 @@ bool DeclSpec::SetTypeQual(TQ T, SourceLocation Loc) {
   case TQ_volatile: TQ_volatileLoc = Loc; return false;
   case TQ_unaligned: TQ_unalignedLoc = Loc; return false;
   case TQ_atomic:   TQ_atomicLoc = Loc; return false;
-  case TQ_reentrant:   TQ_reentrantLoc = Loc; return false;
   }
 
   llvm_unreachable("Unknown type qualifier!");
+}
+
+bool DeclSpec::setConcurrencySpec(CQ C, SourceLocation Loc, const char *&PrevSpec, unsigned &DiagID) {
+  ConcurrencyQualifiers |= C;
+  CQ_reentrantLoc = Loc;
+  return false;
 }
 
 bool DeclSpec::setFunctionSpecInline(SourceLocation Loc, const char *&PrevSpec,

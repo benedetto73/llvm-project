@@ -5824,8 +5824,8 @@ void Parser::ParseTypeQualifierListOpt(
                                  getLangOpts());
       break;
     case tok::kw_reentrant:
-      isInvalid = DS.SetTypeQual(DeclSpec::TQ_reentrant, Loc, PrevSpec, DiagID,
-                                 getLangOpts());
+      isInvalid = DS.setConcurrencySpec(DeclSpec::CQ_Reentrant, Loc, PrevSpec, DiagID);
+                                 //getLangOpts());
       break;
     case tok::kw_volatile:
       isInvalid = DS.SetTypeQual(DeclSpec::TQ_volatile, Loc, PrevSpec, DiagID,

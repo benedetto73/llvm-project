@@ -151,14 +151,17 @@ public:
     Restrict = 0x2,
     Volatile = 0x4,
     // betto: not sure
-    Reentrant = 32,
-    CVRMask = Const | Volatile | Restrict,  //  | Reentrant,
+    CVRMask = Const | Volatile | Restrict,
   };
 
   enum GC {
     GCNone = 0,
     Weak,
     Strong
+  };
+
+  enum CQ {
+    Reentrant = 0x1,
   };
 
   enum ObjCLifetime {
@@ -263,15 +266,11 @@ public:
     return Mask;
   }
 
-  bool hasReentrant() const { return Mask & Reentrant; }
-  bool hasOnlyReentrant() const { return Mask == Reentrant; }
-  void removeReentrant() { Mask &= ~Reentrant; }
-  void addReentrant() { Mask |= Reentrant; }
-  Qualifiers withReentrant() const {
-    Qualifiers Qs = *this;
-    Qs.addReentrant();
-    return Qs;
-  }
+  bool hasReentrant() const { return ConcurrencyMask & Reentrant; }
+  bool hasOnlyReentrant() const { return ConcurrencyMask == Reentrant; }
+  void removeReentrant() { ConcurrencyMask &= ~Reentrant; }
+  void addReentrant() { ConcurrencyMask |= Reentrant; }
+  
 
   bool hasConst() const { return Mask & Const; }
   bool hasOnlyConst() const { return Mask == Const; }
@@ -626,6 +625,10 @@ private:
   // bits:     |0 1 2|3|4 .. 5|6  ..  8|9   ...   31|
   //           |C R V|U|GCAttr|Lifetime|AddressSpace|
   uint32_t Mask = 0;
+
+  // bits:      |0           | 1  ...   31|
+  //            |Reentrant   |    empty   |
+  uint32_t ConcurrencyMask = 0;
 
   static const uint32_t UMask = 0x8;
   static const uint32_t UShift = 3;
