@@ -13688,6 +13688,12 @@ static void DiagnoseRecursiveConstFields(Sema &S, const Expr *E,
 static bool CheckForModifiableLvalue(Expr *E, SourceLocation Loc, Sema &S) {
   assert(!E->hasPlaceholderType(BuiltinType::PseudoObject));
 
+  // betto TO CODE
+  // - are we in a reentrant method?
+  // - If yes, is there a mutex at the beginning of the method?
+  // - If yes, proceed normally.
+  // - If not, emit an error here. Code cannot assign to any variable without a mutex. It can only call reentrant methods or manipulate apomics.
+
   S.CheckShadowingDeclModification(E, Loc);
 
   SourceLocation OrigLoc = Loc;

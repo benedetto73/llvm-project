@@ -150,7 +150,9 @@ public:
     Const    = 0x1,
     Restrict = 0x2,
     Volatile = 0x4,
-    CVRMask = Const | Volatile | Restrict
+    // betto: not sure
+    Reentrant = 32,
+    CVRMask = Const | Volatile | Restrict,  //  | Reentrant,
   };
 
   enum GC {
@@ -261,10 +263,22 @@ public:
     return Mask;
   }
 
+  bool hasReentrant() const { return Mask & Reentrant; }
+  bool hasOnlyReentrant() const { return Mask == Reentrant; }
+  void removeReentrant() { Mask &= ~Reentrant; }
+  void addReentrant() { Mask |= Reentrant; }
+  Qualifiers withReentrant() const {
+    Qualifiers Qs = *this;
+    Qs.addReentrant();
+    return Qs;
+  }
+
   bool hasConst() const { return Mask & Const; }
   bool hasOnlyConst() const { return Mask == Const; }
   void removeConst() { Mask &= ~Const; }
-  void addConst() { Mask |= Const; }
+  void addConst() {
+    Mask |= Const;
+  }
   Qualifiers withConst() const {
     Qualifiers Qs = *this;
     Qs.addConst();

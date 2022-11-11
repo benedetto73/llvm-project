@@ -453,7 +453,7 @@ private:
       bool ProbablyFunctionTypeLParen =
           (CurrentToken->is(tok::l_paren) && CurrentToken->Next &&
            CurrentToken->Next->isOneOf(tok::star, tok::amp, tok::caret));
-      if ((CurrentToken->Previous->isOneOf(tok::kw_const, tok::kw_auto) ||
+      if ((CurrentToken->Previous->isOneOf(tok::kw_const, tok::kw_auto, tok::kw_reentrant) ||
            CurrentToken->Previous->isSimpleTypeSpecifier()) &&
           !(CurrentToken->is(tok::l_brace) ||
             (CurrentToken->is(tok::l_paren) && !ProbablyFunctionTypeLParen))) {
@@ -2190,7 +2190,7 @@ private:
     // Functions which end with decorations like volatile, noexcept are unlikely
     // to be casts.
     if (Tok.Next->isOneOf(tok::kw_noexcept, tok::kw_volatile, tok::kw_const,
-                          tok::kw_requires, tok::kw_throw, tok::arrow,
+                          tok::kw_requires, tok::kw_throw, tok::arrow, tok::kw_reentrant,
                           Keywords.kw_override, Keywords.kw_final) ||
         isCpp11AttributeSpecifier(*Tok.Next)) {
       return false;
@@ -3753,7 +3753,7 @@ bool TokenAnnotator::spaceRequiredBetween(const AnnotatedLine &Line,
   }
   if (Right.getType() == TT_TrailingAnnotation &&
       Right.isOneOf(tok::amp, tok::ampamp) &&
-      Left.isOneOf(tok::kw_const, tok::kw_volatile) &&
+      Left.isOneOf(tok::kw_const, tok::kw_volatile, tok::kw_reentrant) &&
       (!Right.Next || Right.Next->is(tok::semi))) {
     // Match const and volatile ref-qualifiers without any additional
     // qualifiers such as

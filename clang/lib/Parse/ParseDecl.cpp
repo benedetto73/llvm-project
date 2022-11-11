@@ -3717,7 +3717,7 @@ void Parser::ParseDeclarationSpecifiers(
         // Note: if updating this list, please make sure we update
         // isCXXDeclarationSpecifier's check for IsPlaceholderSpecifier to have
         // a matching list.
-        if (NextToken().isOneOf(tok::identifier, tok::kw_const,
+        if (NextToken().isOneOf(tok::identifier, tok::kw_const, tok::kw_reentrant,
                                 tok::kw_volatile, tok::kw_restrict, tok::amp,
                                 tok::ampamp)) {
           Diag(Loc, diag::err_placeholder_expected_auto_or_decltype_auto)
@@ -5821,6 +5821,10 @@ void Parser::ParseTypeQualifierListOpt(
 
     case tok::kw_const:
       isInvalid = DS.SetTypeQual(DeclSpec::TQ_const   , Loc, PrevSpec, DiagID,
+                                 getLangOpts());
+      break;
+    case tok::kw_reentrant:
+      isInvalid = DS.SetTypeQual(DeclSpec::TQ_reentrant, Loc, PrevSpec, DiagID,
                                  getLangOpts());
       break;
     case tok::kw_volatile:

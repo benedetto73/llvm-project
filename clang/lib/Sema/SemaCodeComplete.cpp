@@ -5813,6 +5813,8 @@ static void AddTypeQualifierResults(DeclSpec &DS, ResultBuilder &Results,
     Results.AddResult("_Atomic");
   if (LangOpts.MSVCCompat && !(DS.getTypeQualifiers() & DeclSpec::TQ_unaligned))
     Results.AddResult("__unaligned");
+  if (LangOpts.C99 && !(DS.getTypeQualifiers() & DeclSpec::TQ_reentrant))
+    Results.AddResult("reentrant");
 }
 
 void Sema::CodeCompleteTypeQualifiers(DeclSpec &DS) {
