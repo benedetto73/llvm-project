@@ -6770,3 +6770,11 @@ The symbol used for ``thunk-extern`` is target specific:
 As such, this function attribute is currently only supported on X86 targets.
   }];
 }
+
+def ReentrantDocs : Documentation {
+  let Category = DocCatFunction;
+  let Content = [{
+The attribute ``reentrant`` can 
+}];
+
+}

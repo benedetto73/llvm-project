@@ -4096,3 +4096,13 @@ def FunctionReturnThunks : InheritableAttr,
   let Subjects = SubjectList<[Function]>;
   let Documentation = [FunctionReturnThunksDocs];
 }
+
+def Reentrant : InheritableAttr
+{
+  let Spellings = [Keyword<"reentrant">];
+  let Subjects = SubjectList<[Function, HasFunctionProto, ParmVar], ErrorDiag,
+                             "functions, methods, and parameters">;
+  let Documentation = [ReentrantDocs];
+  let LangOpts = [CPlusPlus];
+  let SimpleHandler = 1;
+}

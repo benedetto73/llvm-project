@@ -2936,6 +2936,11 @@ private:
   bool isHLSLQualifier(const Token &Tok) const;
   void ParseHLSLQualifiers(ParsedAttributes &Attrs);
 
+  // C++-BP73
+  //
+  void ParseReentrantFunctionAttribute(ParsedAttributes &attrs);
+  void ParseReentrantParameterAttribute(ParsedAttributes &attrs);
+
   VersionTuple ParseVersionTuple(SourceRange &Range);
   void ParseAvailabilityAttribute(IdentifierInfo &Availability,
                                   SourceLocation AvailabilityLoc,

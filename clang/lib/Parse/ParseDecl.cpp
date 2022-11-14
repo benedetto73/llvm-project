@@ -907,6 +907,20 @@ void Parser::ParseCUDAFunctionAttributes(ParsedAttributes &attrs) {
   }
 }
 
+// C++-BP73
+//
+void Parser::ParseReentrantFunctionAttribute(ParsedAttributes &attrs) {
+  while (Tok.is(tok::kw_reentrant)) {
+    IdentifierInfo *AttrName = Tok.getIdentifierInfo();
+    SourceLocation AttrNameLoc = ConsumeToken();
+    attrs.addNew(AttrName, AttrNameLoc, nullptr, AttrNameLoc, nullptr, 0,
+                 ParsedAttr::AS_Keyword);
+  }
+}
+void ParseReentrantParameterAttribute(ParsedAttributes &attrs) {
+  assert(0);
+}
+
 void Parser::ParseOpenCLQualifiers(ParsedAttributes &Attrs) {
   IdentifierInfo *AttrName = Tok.getIdentifierInfo();
   SourceLocation AttrNameLoc = Tok.getLocation();
@@ -3833,6 +3847,11 @@ void Parser::ParseDeclarationSpecifiers(
       ParseCUDAFunctionAttributes(DS.getAttributes());
       continue;
 
+    // CUDA/HIP single token adornments.
+    case tok::kw_reentrant:
+      ParseReentrantFunctionAttribute(DS.getAttributes());
+      continue;
+
     // Nullability type specifiers.
     case tok::kw__Nonnull:
     case tok::kw__Nullable:
@@ -5897,6 +5916,12 @@ void Parser::ParseTypeQualifierListOpt(
 
     // Objective-C 'kindof' types.
     case tok::kw___kindof:
+      DS.getAttributes().addNew(Tok.getIdentifierInfo(), Loc, nullptr, Loc,
+                                nullptr, 0, ParsedAttr::AS_Keyword);
+      (void)ConsumeToken();
+      continue;
+
+    case tok::kw_reentrant:
       DS.getAttributes().addNew(Tok.getIdentifierInfo(), Loc, nullptr, Loc,
                                 nullptr, 0, ParsedAttr::AS_Keyword);
       (void)ConsumeToken();
