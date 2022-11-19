@@ -3847,9 +3847,10 @@ void Parser::ParseDeclarationSpecifiers(
       ParseCUDAFunctionAttributes(DS.getAttributes());
       continue;
 
-    // CUDA/HIP single token adornments.
+    // C++-bp73 Reentrant
     case tok::kw_reentrant:
-      ParseReentrantFunctionAttribute(DS.getAttributes());
+      //ParseReentrantFunctionAttribute(DS.getAttributes());
+      isInvalid = DS.SetReentrant(Loc, PrevSpec, DiagID);
       continue;
 
     // Nullability type specifiers.
@@ -5922,9 +5923,8 @@ void Parser::ParseTypeQualifierListOpt(
       continue;
 
     case tok::kw_reentrant:
-      DS.getAttributes().addNew(Tok.getIdentifierInfo(), Loc, nullptr, Loc,
-                                nullptr, 0, ParsedAttr::AS_Keyword);
-      (void)ConsumeToken();
+      ParseReentrantFunctionAttribute(DS.getAttributes());
+      DS.SetReentrant(Loc, PrevSpec, DiagID);
       continue;
 
     case tok::kw___attribute:

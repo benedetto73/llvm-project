@@ -360,6 +360,7 @@ private:
   unsigned FS_forceinline_specified: 1;
   unsigned FS_virtual_specified : 1;
   unsigned FS_noreturn_specified : 1;
+  bool FS_reentrant_specified;
 
   // friend-specifier
   unsigned Friend_specified : 1;
@@ -453,7 +454,10 @@ public:
         FS_noreturn_specified(false), Friend_specified(false),
         ConstexprSpecifier(
             static_cast<unsigned>(ConstexprSpecKind::Unspecified)),
-        Attrs(attrFactory), writtenBS(), ObjCQualifiers(nullptr) {}
+        Attrs(attrFactory), writtenBS(), ObjCQualifiers(nullptr) {
+
+          FS_reentrant_specified = false;
+        }
 
   // storage-class-specifier
   SCS getStorageClassSpec() const { return (SCS)StorageClassSpec; }
@@ -501,6 +505,10 @@ public:
   bool isTypeSpecPipe() const { return TypeSpecPipe; }
   bool isTypeSpecSat() const { return TypeSpecSat; }
   bool isConstrainedAuto() const { return ConstrainedAuto; }
+
+  bool isReentrant() const {
+    return FS_reentrant_specified;
+  }
 
   ParsedType getRepAsType() const {
     assert(isTypeRep((TST) TypeSpecType) && "DeclSpec does not store a type");
@@ -740,6 +748,9 @@ public:
     assert(isExprRep((TST) TypeSpecType));
     ExprRep = Rep;
   }
+
+  bool SetReentrant(SourceLocation Loc, const char *&PrevSpec,
+                      unsigned &DiagID);
 
   bool SetTypeQual(TQ T, SourceLocation Loc);
 

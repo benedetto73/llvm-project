@@ -853,6 +853,19 @@ bool DeclSpec::SetTypeSpecType(TST T, SourceLocation Loc,
   return false;
 }
 
+bool DeclSpec::SetReentrant(SourceLocation Loc, const char *&PrevSpec,
+                              unsigned &DiagID) {
+  // Cannot set twice
+  if (TypeSpecSat) {
+    DiagID = diag::warn_duplicate_declspec;
+    PrevSpec = "_861";
+    return true;
+  }
+  FS_reentrant_specified = true;
+  //TSReentrantLoc = Loc;
+  return false;
+}
+
 bool DeclSpec::SetTypeSpecSat(SourceLocation Loc, const char *&PrevSpec,
                               unsigned &DiagID) {
   // Cannot set twice
@@ -1127,6 +1140,8 @@ void DeclSpec::Finish(Sema &S, const PrintingPolicy &Policy) {
   // type.
   if (TypeSpecType == TST_error)
     return;
+
+  auto xx123 = getAttributes().hasAttribute(ParsedAttr::AT_Reentrant);
 
   // If decltype(auto) is used, no other type specifiers are permitted.
   if (TypeSpecType == TST_decltype_auto &&

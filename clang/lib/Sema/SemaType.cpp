@@ -5742,11 +5742,16 @@ static TypeSourceInfo *GetFullTypeForDeclarator(TypeProcessingState &state,
     //   S<int() const> s;
     //
     // ... for instance.
+
+    bool isReentrant = D.getDeclSpec().isReentrant();
+
     if (IsQualifiedFunction &&
-        !(Kind == Member &&
+        ((!(Kind == Member &&
           D.getDeclSpec().getStorageClassSpec() != DeclSpec::SCS_static) &&
         !IsTypedefName && D.getContext() != DeclaratorContext::TemplateArg &&
-        D.getContext() != DeclaratorContext::TemplateTypeArg) {
+        D.getContext() != DeclaratorContext::TemplateTypeArg)
+        && !isReentrant))
+        {
       SourceLocation Loc = D.getBeginLoc();
       SourceRange RemovalRange;
       unsigned I;

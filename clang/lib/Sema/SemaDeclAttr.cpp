@@ -2246,6 +2246,10 @@ static void handleAnalyzerNoReturnAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   D->addAttr(::new (S.Context) AnalyzerNoReturnAttr(S.Context, AL));
 }
 
+static void handleReentrantAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
+    D->addAttr(::new (S.Context) ReentrantAttr(S.Context, AL));
+}
+
 // PS3 PPU-specific.
 static void handleVecReturnAttr(Sema &S, Decl *D, const ParsedAttr &AL) {
   /*
@@ -9091,6 +9095,11 @@ ProcessDeclAttribute(Sema &S, Scope *scope, Decl *D, const ParsedAttr &AL,
     break;
   case ParsedAttr::AT_AcquiredAfter:
     handleAcquiredAfterAttr(S, D, AL);
+    break;
+
+  // C++-bp73 attributes
+  case ParsedAttr::AT_Reentrant:
+    handleReentrantAttr(S, D, AL);
     break;
 
   // Capability analysis attributes.
